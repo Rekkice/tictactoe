@@ -1,0 +1,27 @@
+<.header>
+  Listing Matches
+  <:actions>
+    <.link href={~p"/match/new"}>
+      <.button>New Match</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="matches" rows={@matches} row_click={&JS.navigate(~p"/match/#{&1}")}>
+  <:col :let={match} label="Turn"><%= match.turn %></:col>
+  <:col :let={match} label="State"><%= match.state %></:col>
+  <:col :let={match} label="Status"><%= match.game_status %></:col>
+  <:col :let={match} label="Host player"><%= match.host_player %></:col>
+  <:col :let={match} label="Guest player"><%= match.guest_player %></:col>
+  <:action :let={match}>
+    <div class="sr-only">
+      <.link navigate={~p"/match/#{match}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/match/#{match}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={match}>
+    <.link href={~p"/match/#{match}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
