@@ -61,19 +61,23 @@ COPY assets assets
 WORKDIR /app/assets
 
 # node dependencies
+RUN npm install
+# # devDependencies
+# RUN npm install svelte svelte-preprocess
 
-# devDependencies
-RUN npm install svelte svelte-preprocess
+# RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
 
-RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
-
-# dependencies
-RUN npm install svelvet phoenix phoenix_html phoenix_live_view
+# # dependencies
+# RUN npm install svelvet phoenix phoenix_html phoenix_live_view
 
 WORKDIR /app
 
 # compile assets
 RUN mix assets.deploy
+
+RUN mix assets.build || true
+
+# COPY priv priv ?
 
 # Compile the release
 RUN mix compile
