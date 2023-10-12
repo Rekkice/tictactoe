@@ -6,7 +6,7 @@
     const hostSymbol = "X"
     const isHost = playerSymbol == hostSymbol
     
-    const inviteURL = "http://localhost:4000/match/" + match.id + "?g"
+    const inviteURL = (typeof window !== "undefined") ? window.location.href + "?g" : "Loading..."
 
     let heading = `${match.turn}'s turn`
 
