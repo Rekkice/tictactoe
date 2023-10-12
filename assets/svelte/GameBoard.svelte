@@ -8,12 +8,16 @@
     
     const inviteURL = (typeof window !== "undefined") ? window.location.href + "?g" : "Loading..."
 
-    let heading = `${match.turn}'s turn`
+    let heading = `${getPlayerTurn(match)}'s turn`
+    $: if (match.game_status == "ongoing") heading = `${getPlayerTurn(match)}'s turn`
+    function getPlayerTurn(match) {
+        if (match.turn == hostSymbol) return match.host_player
+        else return match.guest_player
+    }
 
     let nickname: string
 
     $: if (match.game_status != "waiting" && live) statusNotify(match.game_status)
-    $: if (match.game_status == "ongoing") heading = `${match.turn}'s turn`
 
     function statusNotify(status) {
         switch(status) {
