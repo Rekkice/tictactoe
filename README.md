@@ -1,5 +1,7 @@
 # Tictactoe thing
 
+Hosted here: https://tictactoe-thing.fly.dev/
+
 To start the server:
 
   * Run `mix setup` to install and setup dependencies
