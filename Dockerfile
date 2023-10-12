@@ -67,8 +67,6 @@ RUN npm install svelte svelte-preprocess
 
 RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
 
-RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
-
 # dependencies
 RUN npm install svelvet phoenix phoenix_html phoenix_live_view
 
@@ -119,8 +117,6 @@ WORKDIR /app/assets
 
 # devDependencies
 RUN npm install svelte svelte-preprocess
-
-RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
 
 RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
 
