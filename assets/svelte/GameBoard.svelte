@@ -48,7 +48,7 @@
 
     function shareInvite() {
         navigator.share({
-            title: "tictactoe thing",
+            title: "tic tac toe thing",
             text: "play tictactoe with me!",
             url: inviteURL
         })
@@ -70,7 +70,7 @@
             class="h-full w-full text-[600%] select-none flex items-center justify-center aspect-square border-4 rounded-lg border-seagull-900 text-seagull-900"
             on:click={() => makeMove(i)}
         >
-            {cell}
+            <span class="-my-16">{cell}</span>
         </button>
     {/each}
 </div>
