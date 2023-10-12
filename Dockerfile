@@ -14,6 +14,7 @@
 ARG ELIXIR_VERSION=1.14.5
 ARG OTP_VERSION=25.3.1
 ARG DEBIAN_VERSION=bullseye-20230227-slim
+ARG NODE_MAJOR=20
 
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
@@ -21,8 +22,14 @@ ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
-RUN apt-get update -y && apt-get install -y build-essential git \
+RUN apt-get update -y && apt-get install -y build-essential git ca-certificates curl gnupg \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# install node
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update -y && apt-get install nodejs -y
 
 # prepare build dir
 WORKDIR /app
@@ -51,6 +58,22 @@ COPY lib lib
 
 COPY assets assets
 
+WORKDIR /app/assets
+
+# node dependencies
+
+# devDependencies
+RUN npm install svelte svelte-preprocess
+
+RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
+
+RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
+
+# dependencies
+RUN npm install svelvet phoenix phoenix_html phoenix_live_view
+
+WORKDIR /app
+
 # compile assets
 RUN mix assets.deploy
 
@@ -67,8 +90,14 @@ RUN mix release
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
-RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales \
+RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates curl gnupg \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# install node
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update -y && apt-get install nodejs -y
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
@@ -82,6 +111,23 @@ RUN chown nobody /app
 
 # set runner ENV
 ENV MIX_ENV="prod"
+
+WORKDIR /app/assets
+
+# node dependencies
+# RUN npm install
+
+# devDependencies
+RUN npm install svelte svelte-preprocess
+
+RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
+
+RUN npm install esbuild-plugin-import-glob esbuild-svelte stylus
+
+# dependencies
+RUN npm install svelvet phoenix phoenix_html phoenix_live_view
+
+WORKDIR /app
 
 # Only copy the final release from the build stage
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/tictactoe ./

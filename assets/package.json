@@ -1,7 +1,6 @@
 {
     "devDependencies": {
         "@types/lodash": "^4.14.192",
-        "esbuild": "^0.16.17",
         "esbuild-plugin-import-glob": "^0.1.1",
         "esbuild-svelte": "^0.7.4",
         "lodash": "^4.17.21",
