@@ -15,8 +15,10 @@ defmodule TictactoeWeb.MatchController do
         |> put_flash(:info, "Match created successfully.")
         |> redirect(to: ~p"/match/#{match}")
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset)
+      {:error, %Ecto.Changeset{} = _changeset} ->
+        conn
+        |> put_flash(:error, "There was a problem creating a match")
+        |> redirect(to: "/")
     end
   end
 
@@ -25,32 +27,32 @@ defmodule TictactoeWeb.MatchController do
     render(conn, :show, match: match)
   end
 
-  def edit(conn, %{"id" => id}) do
-    match = Matches.get_match!(id)
-    changeset = Matches.change_match(match)
-    render(conn, :edit, match: match, changeset: changeset)
-  end
+  # def edit(conn, %{"id" => id}) do
+  #   match = Matches.get_match!(id)
+  #   changeset = Matches.change_match(match)
+  #   render(conn, :edit, match: match, changeset: changeset)
+  # end
 
-  def update(conn, %{"id" => id, "match" => match_params}) do
-    match = Matches.get_match!(id)
+  # def update(conn, %{"id" => id, "match" => match_params}) do
+  #   match = Matches.get_match!(id)
 
-    case Matches.update_match(match, match_params) do
-      {:ok, match} ->
-        conn
-        |> put_flash(:info, "Match updated successfully.")
-        |> redirect(to: ~p"/match/#{match}")
+  #   case Matches.update_match(match, match_params) do
+  #     {:ok, match} ->
+  #       conn
+  #       |> put_flash(:info, "Match updated successfully.")
+  #       |> redirect(to: ~p"/match/#{match}")
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, match: match, changeset: changeset)
-    end
-  end
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       render(conn, :edit, match: match, changeset: changeset)
+  #   end
+  # end
 
-  def delete(conn, %{"id" => id}) do
-    match = Matches.get_match!(id)
-    {:ok, _match} = Matches.delete_match(match)
+  # def delete(conn, %{"id" => id}) do
+  #   match = Matches.get_match!(id)
+  #   {:ok, _match} = Matches.delete_match(match)
 
-    conn
-    |> put_flash(:info, "Match deleted successfully.")
-    |> redirect(to: ~p"/match")
-  end
+  #   conn
+  #   |> put_flash(:info, "Match deleted successfully.")
+  #   |> redirect(to: ~p"/match")
+  # end
 end
