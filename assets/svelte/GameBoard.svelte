@@ -3,6 +3,8 @@
     export let playerSymbol: string
     export let live
 
+    // $: console.log("Match state: ", match)
+
     const hostSymbol = "X"
     const isHost = playerSymbol == hostSymbol
     
@@ -22,13 +24,13 @@
     function statusNotify(status) {
         switch(status) {
             case "X_won": {
-                heading = "X won!"
+                heading = `${match.host_player} won!`
                 const type = isHost ? "info" : "error"
                 // live.pushEvent("put_flash", {type: type, message: heading})
                 break
             }
             case "O_won": {
-                heading = "O won!"
+                heading = `${match.guest_player} won!`
                 const type = !isHost ? "info" : "error"
                 // live.pushEvent("put_flash", {type: type, message: heading})
                 break
