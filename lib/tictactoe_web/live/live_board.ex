@@ -13,11 +13,13 @@ defmodule TictactoeWeb.BoardLive do
 
     match = Matches.get_match!(id)
     guest? = Map.has_key?(params, "g")
+
     player_symbol =
       case guest? do
-        :false -> "X"
-        :true -> "O"
+        false -> "X"
+        true -> "O"
       end
+
     {:ok, assign(socket, match: match, player_symbol: player_symbol)}
   end
 
