@@ -126,7 +126,7 @@
             </label>
 
             <div class="w-full flex justify-center">
-                <button on:click={nicknameInput} class="bg-seagull-600 hover:bg-seagull-700 text-white font-bold py-2 px-4 rounded">
+                <button class="bg-seagull-600 hover:bg-seagull-700 text-white font-bold py-2 px-4 rounded">
                     Done
                 </button>
             </div>
