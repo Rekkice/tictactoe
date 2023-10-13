@@ -29,7 +29,7 @@ defmodule TictactoeWeb.BoardLive do
 
   def handle_event("guest_nickname_input", %{"id" => id, "nickname" => nickname}, socket) do
     match = Matches.get_match!(id)
-    IO.inspect Matches.guest_nickname_input(match, nickname)
+    Matches.guest_nickname_input(match, nickname)
     {:noreply, socket}
   end
 
