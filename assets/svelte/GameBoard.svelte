@@ -120,7 +120,7 @@
         <form class="w-full" on:submit|preventDefault={nicknameInput}>
             <label class="flex flex-col mx-auto my-4 font-semibold w-5/6">
                 Enter a nickname to start
-                <input type="text" placeholder="Nickname" minlength="3" class="font-normal invalid:ring-red-500" bind:value={nickname}>
+                <input type="text" placeholder="Nickname" minlength="3"  maxlength="25" class="font-normal invalid:ring-red-500" bind:value={nickname}>
             </label>
 
             <div class="w-full flex justify-center">

@@ -36,8 +36,8 @@ defmodule Tictactoe.Matches.Match do
     match
     |> cast(attrs, [:turn, :state, :game_status, :host_player, :guest_player])
     |> validate_required([:turn, :state, :game_status, :host_player])
-    |> validate_length(:host_player, min: 3)
-    |> validate_length(:guest_player, min: 3)
+    |> validate_length(:host_player, min: 3, max: 25)
+    |> validate_length(:guest_player, min: 3, max: 25)
     |> validate_length(:state, is: 9)
     |> validate_state
   end

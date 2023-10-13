@@ -4,7 +4,7 @@
   <h1 class="mx-auto text-8xl w-fit sm:mb-16">tic tac toe thing</h1>
   <.simple_form :let={f} for={@changeset} action={"/create_match"} method="post" class="flex flex-col w-fit gap-2 mx-auto">
     <.label for="host_player">Nickname</.label>
-    <.input type="text" name="host_player" field={f[:host_player]} minlength="3" class="ring-1 invalid:ring-red-500" />
+    <.input type="text" name="host_player" field={f[:host_player]} minlength="3" maxlength="25" class="ring-1 invalid:ring-red-500" />
     <:actions>
         <button class="bg-seagull-600 hover:bg-seagull-700 text-white font-bold py-2 px-4 rounded">Create match</button>
     </:actions>
