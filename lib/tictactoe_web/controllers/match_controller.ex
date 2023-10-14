@@ -13,6 +13,7 @@ defmodule TictactoeWeb.MatchController do
       {:ok, match} ->
         conn
         |> put_flash(:info, "Match created successfully.")
+        |> put_session("match:#{match.id}", %{role: "host"})
         |> redirect(to: ~p"/match/#{match}")
 
       {:error, %Ecto.Changeset{} = _changeset} ->

@@ -4,23 +4,33 @@ defmodule TictactoeWeb.BoardLive do
 
   def render(assigns) do
     ~H"""
-    <.svelte name="GameBoard" props={%{match: @match, playerSymbol: @player_symbol}} socket={@socket} />
+    <.svelte name="GameBoard" props={%{match: @match, playerSymbol: @player_symbol, role: @role}} socket={@socket} />
     """
   end
 
-  def mount(%{"id" => id} = params, _session, socket) do
+  def mount(%{"id" => id} = _params, session, socket) do
     if connected?(socket), do: Matches.subscribe(id)
 
     match = Matches.get_match!(id)
-    guest? = Map.has_key?(params, "g")
+    match_key = "match:#{match.id}"
 
-    player_symbol =
-      case guest? do
-        false -> "X"
-        true -> "O"
+    role =
+      if Map.has_key?(session, match_key) do
+        session
+        |> Map.get(match_key)
+        |> Map.get(:role)
+      else
+        "spectator"
       end
 
-    {:ok, assign(socket, match: match, player_symbol: player_symbol)}
+    player_symbol =
+      case role do
+        "host" -> "X"
+        "guest" -> "O"
+        _ -> nil
+      end
+
+    {:ok, assign(socket, match: match, player_symbol: player_symbol, role: role)}
   end
 
   def handle_event("make_move", %{"id" => id, "index" => index, "symbol" => symbol}, socket) do
@@ -30,9 +40,18 @@ defmodule TictactoeWeb.BoardLive do
   end
 
   def handle_event("guest_nickname_input", %{"id" => id, "nickname" => nickname}, socket) do
-    match = Matches.get_match!(id)
-    Matches.guest_nickname_input(match, nickname)
-    {:noreply, socket}
+    role =
+      socket
+      |> Map.get(:assigns)
+      |> Map.get(:role)
+
+    if role == "guest" do
+      match = Matches.get_match!(id)
+      Matches.guest_nickname_input(match, nickname)
+      {:noreply, socket}
+    else
+      {:noreply, put_flash(socket, :error, "You don't have the permission to join this match")}
+    end
   end
 
   def handle_event("put_flash", %{"type" => type, "message" => message}, socket) do

@@ -1,14 +1,20 @@
 <script lang="ts">
     export let match: any
-    export let playerSymbol: string
+    export let playerSymbol: string | null
+    export let role: string
     export let live
 
-    // $: console.log("Match state: ", match)
+    $: console.log("Match state: ", match)
 
     const hostSymbol = "X"
-    const isHost = playerSymbol == hostSymbol
     
-    const inviteURL = (typeof window !== "undefined") ? window.location.href + "?g" : "Loading..."
+    const inviteURL = match.short_link_id ? getInviteURL(match.short_link_id.code) : "null"
+
+    function getInviteURL(code) {
+        if (typeof window == "undefined") return "Loading..."
+        const parsedURL = new URL(window.location.href)
+        return `${parsedURL.protocol}//${parsedURL.host}/m/${code}`
+    }
 
     let heading = `${getPlayerTurn(match)}'s turn`
     $: if (match.game_status == "ongoing") heading = `${getPlayerTurn(match)}'s turn`
@@ -19,20 +25,16 @@
 
     let nickname: string
 
-    $: if (match.game_status != "waiting" && live) statusNotify(match.game_status)
+    $: if (match.game_status != "waiting_join" && live) statusNotify(match.game_status)
 
     function statusNotify(status) {
         switch(status) {
             case "X_won": {
                 heading = `${match.host_player} won!`
-                const type = isHost ? "info" : "error"
-                // live.pushEvent("put_flash", {type: type, message: heading})
                 break
             }
             case "O_won": {
                 heading = `${match.guest_player} won!`
-                const type = !isHost ? "info" : "error"
-                // live.pushEvent("put_flash", {type: type, message: heading})
                 break
             }
             case "draw": {
@@ -72,7 +74,7 @@
 <div class="w-full h-full grid grid-cols-3 grid-rows-3 relative after:absolute after:w-full after:h-full after:bg-transparent after:border-4 after:border-seagull-200 after:pointer-events-none">
     {#each match.state as cell, i}
         <button
-            disabled={(cell == "X" || cell == "O") || (match.turn != playerSymbol) || (match.game_status != "ongoing")}
+            disabled={(cell == "X" || cell == "O") || (match.turn != playerSymbol) || (match.game_status != "ongoing") || (playerSymbol == null)}
             class="h-full w-full text-[600%] select-none flex items-center justify-center aspect-square border-4 rounded-lg border-seagull-900 text-seagull-900"
             on:click={() => makeMove(i)}
         >
@@ -81,7 +83,7 @@
     {/each}
 </div>
 
-{#if match.game_status == "waiting" && isHost}
+{#if match.game_status == "waiting_join" && role == "host"}
 <div class="flex items-center justify-center fixed left-0 bottom-0 w-full h-full bg-gray-800/20 text-seagull-800">
     <div class="bg-white rounded-2xl sm:min-w-[500px] mx-2 text-center py-2 shadow-lg">
       <div class="flex flex-col items-start p-4">
@@ -111,7 +113,7 @@
   </div>
 {/if}
 
-{#if match.game_status == "waiting" && !isHost}
+{#if match.game_status == "waiting_join" && role == "guest"}
 <div class="flex items-center justify-center fixed left-0 bottom-0 w-full h-full bg-gray-800/20 text-seagull-800">
     <div class="bg-white rounded-2xl w-full sm:min-w-[500px] sm:w-auto mx-2 py-2 shadow-lg">
       <div class="flex flex-col items-start p-4">

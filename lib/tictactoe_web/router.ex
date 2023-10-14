@@ -20,6 +20,8 @@ defmodule TictactoeWeb.Router do
     get "/", PageController, :home
     post "/create_match", MatchController, :create
 
+    get "/m/:code", ShortLinkController, :show
+
     resources "/match", MatchController, only: [:index]
     live "/match/:id", BoardLive, :show
   end

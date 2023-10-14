@@ -9,6 +9,7 @@ defmodule Tictactoe.Matches do
 
   alias Tictactoe.Matches.Match
   alias Tictactoe.Matches.Board
+  alias Tictactoe.ShortLinks
 
   @doc """
   Returns the list of matches.
@@ -37,7 +38,7 @@ defmodule Tictactoe.Matches do
       ** (Ecto.NoResultsError)
 
   """
-  def get_match!(id), do: Repo.get!(Match, id)
+  def get_match!(id), do: Repo.get!(Match, id) |> Repo.preload(:short_link_id)
 
   @doc """
   Creates a match.
@@ -54,11 +55,13 @@ defmodule Tictactoe.Matches do
   def create_match(attrs \\ %{}) do
     %Match{
       state: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-      game_status: "waiting",
+      game_status: "waiting_join",
       turn: "X"
     }
     |> Match.changeset(attrs |> Map.delete(:state) |> Map.delete(:turn))
     |> Repo.insert()
+    |> ShortLinks.create_short_link()
+    # update match with created short link
   end
 
   @doc """

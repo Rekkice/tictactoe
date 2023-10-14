@@ -1,4 +1,5 @@
 defmodule Tictactoe.Matches.Match do
+  alias Tictactoe.ShortLinks.ShortLink
   use Ecto.Schema
   import Ecto.Changeset
   @derive {Jason.Encoder, except: [:__meta__]}
@@ -6,11 +7,12 @@ defmodule Tictactoe.Matches.Match do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "matches" do
-    field :game_status, :string, default: "waiting"
+    field :game_status, :string, default: "waiting_join"
     field :guest_player, :string
     field :host_player, :string
     field :state, {:array, :string}
     field :turn, :string
+    has_one :short_link_id, ShortLink
 
     timestamps()
   end
@@ -35,6 +37,7 @@ defmodule Tictactoe.Matches.Match do
   def changeset(match, attrs) do
     match
     |> cast(attrs, [:turn, :state, :game_status, :host_player, :guest_player])
+    |> cast_assoc(:short_link_id)
     |> validate_required([:turn, :state, :game_status, :host_player])
     |> validate_length(:host_player, min: 3, max: 25)
     |> validate_length(:guest_player, min: 3, max: 25)
