@@ -74,7 +74,7 @@
 <div class="w-full h-full grid grid-cols-3 grid-rows-3 relative after:absolute after:w-full after:h-full after:bg-transparent after:border-4 after:border-seagull-200 after:pointer-events-none">
     {#each match.state as cell, i}
         <button
-            disabled={(cell == "X" || cell == "O") || (match.turn != playerSymbol) || (match.game_status != "ongoing") || (playerSymbol == null)}
+            disabled={(cell == "X" || cell == "O") || (match.turn != playerSymbol) || (match.game_status != "ongoing") || (role == "spectator")}
             class="h-full w-full text-[600%] select-none flex items-center justify-center aspect-square border-4 rounded-lg border-seagull-900 text-seagull-900"
             on:click={() => makeMove(i)}
         >
