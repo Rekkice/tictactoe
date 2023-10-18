@@ -1,10 +1,15 @@
 defmodule TictactoeWeb.BoardLive do
   use TictactoeWeb, :live_view
   alias Tictactoe.Matches
+  alias Tictactoe.Messages
 
   def render(assigns) do
     ~H"""
-    <.svelte name="GameBoard" props={%{match: @match, playerSymbol: @player_symbol, role: @role}} socket={@socket} />
+    <.svelte
+      name="GameBoard"
+      props={%{match: @match, playerSymbol: @player_symbol, role: @role, initialMessages: @init_messages}}
+      socket={@socket}
+    />
     """
   end
 
@@ -30,12 +35,38 @@ defmodule TictactoeWeb.BoardLive do
         _ -> nil
       end
 
-    {:ok, assign(socket, match: match, player_symbol: player_symbol, role: role)}
+    messages = Messages.get_messages(id)
+
+    {:ok, assign(socket, match: match, player_symbol: player_symbol, role: role, init_messages: messages)}
   end
 
   def handle_event("make_move", %{"id" => id, "index" => index, "symbol" => symbol}, socket) do
     match = Matches.get_match!(id)
     Matches.make_move(match, index, symbol)
+    {:noreply, socket}
+  end
+
+  def handle_event("send_message", %{"content" => content}, socket) do
+    assigns = socket |> Map.get(:assigns)
+    role =
+      assigns
+      |> Map.get(:role)
+
+    match =
+      assigns
+      |> Map.get(:match)
+
+    case role do
+      "host" ->
+        Messages.send_message(%{match_id: match.id, user: match.host_player, content: content})
+
+      "guest" ->
+        Messages.send_message(%{match_id: match.id, user: match.guest_player, content: content})
+
+      _ ->
+        {:noreply, socket}
+    end
+
     {:noreply, socket}
   end
 
@@ -64,5 +95,9 @@ defmodule TictactoeWeb.BoardLive do
 
   def handle_info({:put_flash, type, message}, socket) do
     {:noreply, put_flash(socket, type, message)}
+  end
+
+  def handle_info({:sent_message, message}, socket) do
+    {:noreply, push_event(socket, "received_message", %{message: message})}
   end
 end
