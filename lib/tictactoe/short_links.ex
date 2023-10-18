@@ -1,6 +1,6 @@
 defmodule Tictactoe.ShortLinks do
   @moduledoc """
-  The Matches context.
+  The Short Links context.
   """
 
   import Ecto.Query, warn: false
