@@ -17,7 +17,6 @@
     <div class="sr-only">
       <.link navigate={~p"/match/#{match}"}>Show</.link>
     </div>
-    <.link navigate={~p"/match/#{match}/edit"}>Edit</.link>
   </:action>
   <:action :let={match}>
     <.link href={~p"/match/#{match}"} method="delete" data-confirm="Are you sure?">
