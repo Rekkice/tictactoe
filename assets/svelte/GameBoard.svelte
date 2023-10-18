@@ -153,7 +153,7 @@
         class="text-6xl absolute -translate-x-10 text-seagull-800 hidden sm:block bg-seagull-100 px-2 rounded-l-xl"
         on:click={() => (chatOpen = !chatOpen)}><div class={"transition duration-300 " + (chatOpen ? "rotate-180 translate-y-1" : "")}>&lt;</div></button
     >
-    <section class="bg-seagull-100 sm:w-full rounded-xl h-64 sm:h-4/6 p-4 pt-2">
+    <section class="bg-seagull-100 w-full rounded-xl h-64 sm:h-4/6 p-4 pt-2">
         <div
             class="overflow-y-scroll h-[calc(100%-3rem)] px-2 text-seagull-800"
             id="chatbox"
