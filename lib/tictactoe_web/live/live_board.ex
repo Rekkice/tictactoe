@@ -7,14 +7,16 @@ defmodule TictactoeWeb.BoardLive do
     ~H"""
     <.svelte
       name="GameBoard"
-      props={%{match: @match, playerSymbol: @player_symbol, role: @role, initialMessages: @init_messages}}
+      props={
+        %{match: @match, playerSymbol: @player_symbol, role: @role, initialMessages: @init_messages}
+      }
       socket={@socket}
     />
     """
   end
 
-  def mount(%{"id" => id} = _params, session, socket) do
-    if connected?(socket), do: Matches.subscribe(id)
+  def mount(%{"id" => id}, session, socket) do
+    Matches.subscribe(id)
 
     match = Matches.get_match!(id)
     match_key = "match:#{match.id}"
@@ -37,7 +39,13 @@ defmodule TictactoeWeb.BoardLive do
 
     messages = Messages.get_messages(id)
 
-    {:ok, assign(socket, match: match, player_symbol: player_symbol, role: role, init_messages: messages)}
+    {:ok,
+     assign(socket,
+       match: match,
+       player_symbol: player_symbol,
+       role: role,
+       init_messages: messages
+     )}
   end
 
   def handle_event("make_move", %{"id" => id, "index" => index, "symbol" => symbol}, socket) do
@@ -48,6 +56,7 @@ defmodule TictactoeWeb.BoardLive do
 
   def handle_event("send_message", %{"content" => content}, socket) do
     assigns = socket |> Map.get(:assigns)
+
     role =
       assigns
       |> Map.get(:role)
