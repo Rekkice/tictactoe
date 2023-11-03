@@ -8,7 +8,7 @@ defmodule TictactoeWeb.ShortLinkController do
       {:ok, match} ->
         conn
         |> put_session("match:#{match.id}", %{role: "guest"})
-        |> ShortLinks.destroy(code)
+        # |> ShortLinks.destroy(code)
         |> redirect(to: "/match/#{match.id}")
       {:error, _} ->
         conn
