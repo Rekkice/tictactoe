@@ -11,7 +11,6 @@ defmodule Tictactoe.Messages do
   alias Phoenix.PubSub
 
   def send_message(%{match_id: match_id} = opts) do
-    IO.inspect opts
     Message.changeset(%Message{}, opts)
     |> Repo.insert()
     |> notify(match_id, :sent_message)

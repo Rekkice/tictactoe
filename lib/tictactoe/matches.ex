@@ -118,8 +118,6 @@ defmodule Tictactoe.Matches do
       ) do
     valid_move = Enum.at(old_state, index) == " " && turn == symbol && old_status == "ongoing"
 
-    IO.puts("valid_move: #{valid_move}")
-
     if valid_move do
       new_state = List.replace_at(old_state, index, symbol)
 
