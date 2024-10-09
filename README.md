@@ -25,4 +25,4 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser. M
 ![image](https://github.com/user-attachments/assets/9da50eda-51f0-4c1b-b0d4-86bb5895cd60)
 
 ## Future Features
-- Rematch after a match finishes
+- Ask for rematch after a match finishes
